@@ -1,16 +1,21 @@
 <template>
-  <div class="login__container">
-    <form class="" action="index.html" method="post">
-      <label for="">メールアドレス</label>
-      <input v-model="form.email" type="text" name="" value="" />
-      <label for="">パスワード</label>
-      <input v-model="form.password" type="password" name="" value="" />
-      <button @click="login" type="button" name="button">ログイン</button>
-    </form>
+  <div class="">
+    <div class="login__wrapper">
+      <form class="form__wrapper" action="index.html" method="post">
+        <nuxt-link to="/signup" class="link__signup">OR サインアップ</nuxt-link>
+        <label class="form__label" for="">メールアドレス</label>
+        <input v-model="form.email" class="form__email" type="text" />
+        <label class="form__label" for="">パスワード</label>
+        <input v-model="form.password" class="form__password" type="password" />
+        <button @click="login" class="form__submit" type="button" name="button">
+          ログイン
+        </button>
+      </form>
+    </div>
   </div>
 </template>
 
-<script>
+<script scoped>
 export default {
   middleware({ store, redirect }) {
     if (store.$auth.loggedIn) {
@@ -40,34 +45,29 @@ export default {
 </script>
 
 <style>
-.container {
-  margin: 0 auto;
-  min-height: 100vh;
+.login__wrapper {
   display: flex;
-  justify-content: center;
-  align-items: center;
-  text-align: center;
+  height: 100vh;
+  width: 100vw;
 }
-
-.title {
-  font-family: 'Quicksand', 'Source Sans Pro', -apple-system, BlinkMacSystemFont,
-    'Segoe UI', Roboto, 'Helvetica Neue', Arial, sans-serif;
+.link__signup {
+}
+.form__wrapper {
+  background-color: #eee;
   display: block;
-  font-weight: 300;
-  font-size: 100px;
-  color: #35495e;
-  letter-spacing: 1px;
+  margin: auto;
+  padding: 2rem;
+  width: 25rem;
 }
-
-.subtitle {
-  font-weight: 300;
-  font-size: 42px;
-  color: #526488;
-  word-spacing: 5px;
-  padding-bottom: 15px;
+.form__label {
+  width: 100%;
+  display: block;
 }
-
-.links {
-  padding-top: 15px;
+.form__email,
+.form__password {
+  width: 100%;
+}
+.form__submit {
+  width: 100%;
 }
 </style>
