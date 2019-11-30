@@ -27,7 +27,7 @@ export default {
   /*
    ** Plugins to load before mounting the App
    */
-  plugins: [],
+  plugins: ['@/plugins/axios'],
   /*
    ** Nuxt.js dev-modules
    */
@@ -40,16 +40,46 @@ export default {
    */
   modules: [
     // Doc: https://axios.nuxtjs.org/usage
+    '@nuxtjs/auth',
     '@nuxtjs/axios'
   ],
   /*
    ** Axios module configuration
    ** See https://axios.nuxtjs.org/options
    */
-  axios: {},
-  /*
-   ** Build configuration
-   */
+  axios: {
+    baseURL: 'http://localhost:3000',
+    browserBaseURL: 'http://localhost:3000',
+    // port: 3000,
+    // prefix: '/api',
+    proxy: true
+  },
+  proxy: {},
+  auth: {
+    // Options
+    redirect: {
+      login: '/login', // 未ログイン時に認証ルートへアクセスした際のリダイレクトURL
+      logout: '/login', // ログアウト時のリダイレクトURL
+      callback: false, // Oauth認証等で必要となる コールバックルート
+      home: '/' // ログイン後のリダイレクトURL
+    },
+    strategies: {
+      local: {
+        userinfo_endpoint: false,
+        endpoints: {
+          login: {
+            url: 'api/v1/user_token',
+            method: 'post',
+            propertyName: 'jwt'
+          },
+          // user: { url: 'api/v1/users', method: 'get', propertyName: false },
+          // hobby: { url: '/hobby', method: 'get', propertyName: false },
+          logout: false,
+          user: false
+        }
+      }
+    }
+  },
   build: {
     /*
      ** You can extend webpack config here

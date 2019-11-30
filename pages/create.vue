@@ -1,20 +1,20 @@
 <template>
   <div class="mycontainer">
-    <h1 class="title">
-      auth-module-test
-    </h1>
-    <nuxt-link to="/create">ポスト作成ページ</nuxt-link>
+    <nuxt-link to="/">トップ</nuxt-link>
+    <div class="login__container">
+      <form class="" action="index.html" method="post">
+        <label for="">ポスト</label>
+        <input v-model="postTitle" type="text" name="" value="" />
+      </form>
+    </div>
     <div class="">
       <button @click="getHobby" type="button" name="button">hobby</button>
-      <button @click="logout" type="button" name="button">ログアウト</button>
+      <button @click="createPost" type="button" name="button">
+        ポスト作成
+      </button>
       <div class="">
         <p>趣味：{{ test }}</p>
-      </div>
-      <div class="">
-        <p>state：{{ myState }}</p>
-      </div>
-      <div class="">
-        <p>userStatues{{ userProfile }}</p>
+        <p>トークン趣味：{{ toke }}</p>
       </div>
     </div>
   </div>
@@ -31,29 +31,28 @@ export default {
   },
   data() {
     return {
+      postTitle: '',
       test: ''
     }
   },
   computed: {
     // user() {      return this.$auth.user    }
-    // hobby() {      return this.$auth.hobby    }
-    myState({ store }) {
-      // return this.$store.$auth.state
-      return this.$auth.getToken('local').match(/^Bearer[ ]+([^ ]+)[ ]*$/i)[1]
+    toke() {
+      return this.$store.$auth.getToken('local')
     }
-  },
-  asyncData({ $axios }) {
-    return $axios.get('http://localhost:3000/api/v1/users').then((res) => {
-      return { userProfile: res.data.user }
-    })
   },
   methods: {
     logout() {
       this.$auth.logout()
     },
     getHobby() {
-      this.$axios.get('http://localhost:3000/api/v1/users').then((res) => {
+      this.$axios.get('http://localhost:3000/todos').then((res) => {
         this.test = res.data
+      })
+    },
+    createPost() {
+      this.$axios.post('http://localhost:3000/todos', {
+        todo: this.postTitle
       })
     }
   }
