@@ -4,6 +4,7 @@
       auth-module-test
     </h1>
     <nuxt-link to="/create">ポスト作成ページ</nuxt-link>
+    <nuxt-link to="/collection">コレクション</nuxt-link>
     <div class="">
       <button @click="getHobby" type="button" name="button">hobby</button>
       <button @click="logout" type="button" name="button">ログアウト</button>
@@ -41,11 +42,6 @@ export default {
       // return this.$store.$auth.state
       return this.$auth.getToken('local').match(/^Bearer[ ]+([^ ]+)[ ]*$/i)[1]
     }
-  },
-  asyncData({ $axios }) {
-    return $axios.get('http://localhost:3000/api/v1/users').then((res) => {
-      return { userProfile: res.data.user }
-    })
   },
   methods: {
     logout() {
