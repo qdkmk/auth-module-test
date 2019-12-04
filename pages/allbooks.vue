@@ -6,30 +6,13 @@
         コレクションを作成
       </button>
     </div>
-    <div class="collections_wrapper">
-      <h2>Collections</h2>
-      <ul v-for="collection in myCollections" class="">
-        <li>
-          <h3 @click="getCollectionsBooks(collection.id)">
-            {{ collection.title }}
-          </h3>
-          <div class="">
-            <button
-              @click="openAddBookModal(collection.id)"
-              type="button"
-              name="button"
-            >
-              本を追加
-            </button>
-          </div>
-        </li>
-      </ul>
+    <div class="books_wrapper">
+      <div class="books__wrapper">
+        <books :books="myAllBooks"></books>
+      </div>
     </div>
     <div v-if="modalId !== ''" class="">
       <createBook :modalId="modalId" @close="closeModal()" />
-    </div>
-    <div class="books__wrapper">
-      <books :books="books"></books>
     </div>
   </div>
 </template>
@@ -60,11 +43,9 @@ export default {
   },
   asyncData({ $axios }) {
     // get collections
-    return $axios
-      .get('http://localhost:3000/api/v1/collections/')
-      .then((res) => {
-        return { myCollections: res.data }
-      })
+    return $axios.get('http://localhost:3000/api/v1/books/').then((res) => {
+      return { myAllBooks: res.data }
+    })
   },
   methods: {
     logout() {

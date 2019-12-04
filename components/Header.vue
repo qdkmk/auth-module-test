@@ -1,7 +1,7 @@
 <template>
   <div class="nav__wrapper">
     <div class="title__wrapper">
-      <h1>TITLE</h1>
+      <nuxt-link to="/"><h1>TITLE</h1></nuxt-link>
     </div>
     <button v-if="loggedIn" @click="logout()" type="button" name="button">
       Logout

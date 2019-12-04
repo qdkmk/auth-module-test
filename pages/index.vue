@@ -3,19 +3,11 @@
     <h1 class="title">
       auth-module-test
     </h1>
-    <nuxt-link to="/create">ポスト作成ページ</nuxt-link>
     <nuxt-link to="/collection">コレクション</nuxt-link>
+    <nuxt-link to="/allbooks">全書籍</nuxt-link>
     <div class="">
-      <button @click="getHobby" type="button" name="button">hobby</button>
-      <button @click="logout" type="button" name="button">ログアウト</button>
-      <div class="">
-        <p>趣味：{{ test }}</p>
-      </div>
       <div class="">
         <p>state：{{ myState }}</p>
-      </div>
-      <div class="">
-        <p>userStatues{{ userProfile }}</p>
       </div>
     </div>
   </div>
@@ -36,8 +28,6 @@ export default {
     }
   },
   computed: {
-    // user() {      return this.$auth.user    }
-    // hobby() {      return this.$auth.hobby    }
     myState({ store }) {
       // return this.$store.$auth.state
       return this.$auth.getToken('local').match(/^Bearer[ ]+([^ ]+)[ ]*$/i)[1]
