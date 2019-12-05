@@ -1,11 +1,17 @@
 <template>
-  <div class="create__wrapper">
-    <input v-model="modalTitle" type="text" placeholder="title" />
-    <input v-model="modalIsbn" type="text" placeholder="isbn" />
-    <input v-model="modalAuthor" type="text" placeholder="著者" />
-    <input v-model="modalPublicher" type="text" placeholder="出版社" />
-    <input v-model="modalId" type="text" name="" value="" placeholder="" />
-    <button @click="createBook()" type="button" name="button">
+  <div class="edit__wrapper">
+    <input v-model="book.book_title" type="text" placeholder="title" />
+    <input v-model="book.isbn" type="text" placeholder="isbn" />
+    <input v-model="book.author" type="text" placeholder="著者" />
+    <input v-model="book.publicher" type="text" placeholder="出版社" />
+    <input
+      v-model="book.collection_id"
+      type="text"
+      name=""
+      value=""
+      placeholder=""
+    />
+    <button @click="editBook(book.id)" type="button" name="button">
       登録
     </button>
     <button @click="inputFromIsbn()" type="button" name="button">
@@ -19,37 +25,32 @@
 <script>
 export default {
   props: {
-    modalId: {
-      type: Number,
+    book: {
+      type: Object,
       default: () => {
-        return Number
+        return {}
       }
     }
   },
   data() {
-    return {
-      modalTitle: '',
-      modalIsbn: '',
-      modalAuthor: '',
-      modalPublicher: ''
-    }
+    return {}
   },
   methods: {
     closeModal() {
       this.$emit('close')
     },
-    createBook() {
+    editBook() {
       this.$axios
-        .post('http://localhost:3000/api/v1/books', {
-          collection_id: this.modalId,
-          book_title: this.modalTitle,
-          isbn: this.modalIsbn,
-          author: this.modalAuthor,
-          publicher: this.modalPublicher
+        .patch('http://localhost:3000/api/v1/books/' + this.book.id, {
+          collection_id: this.book.collection_id,
+          book_title: this.book.book_title,
+          isbn: this.book.isbn,
+          author: this.book.author,
+          publicher: this.book.publicher
         })
         .then((res) => {
           if (res && res.status === 200) {
-            alert('success')
+            alert('success:update')
             this.$emit('close')
           }
         })
@@ -74,7 +75,7 @@ export default {
 }
 </script>
 <style scoped>
-.create__wrapper {
+.edit__wrapper {
   background-color: rgba(200, 200, 200, 0.7);
   left: 50%;
   padding: 1rem;

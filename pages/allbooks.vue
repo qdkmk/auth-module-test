@@ -8,7 +8,7 @@
     </div>
     <div class="books_wrapper">
       <div class="books__wrapper">
-        <books :books="myAllBooks"></books>
+        <books :books="myAllBooks" @updateBooks="updateBooks()"></books>
       </div>
     </div>
     <div v-if="modalId !== ''" class="">
@@ -48,8 +48,10 @@ export default {
     })
   },
   methods: {
-    logout() {
-      this.$auth.logout()
+    updateBooks() {
+      this.$axios.get('http://localhost:3000/api/v1/books/').then((res) => {
+        this.myAllBooks = res.data
+      })
     },
     getCollectionsBooks(id) {
       this.$axios

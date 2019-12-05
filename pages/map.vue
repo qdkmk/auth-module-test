@@ -1,102 +1,80 @@
 <template>
   <div class="collections__container">
-    <div class="login__wrapper">
-      <input v-model="collectionTitle" type="text" name="" value="" />
-      <button @click="createCollection" name="button">
-        コレクションを作成
-      </button>
+    <div class="map__container">
+      <network-graph :nodes="graphNode" :edges="graphEdge" @click="onClick" />
     </div>
-    <div class="collections_wrapper">
-      <h2>Collections</h2>
-      <ul v-for="collection in myCollections" class="">
-        <li>
-          <h3
-            v-bind:class="{ active: displayCollectionId === collection.id }"
-            @click="getCollectionsBooks(collection.id)"
-          >
-            {{ collection.title }}
-          </h3>
-          <div class="">
-            <button
-              @click="openAddBookModal(collection.id)"
-              type="button"
-              name="button"
-            >
-              本を追加
-            </button>
-          </div>
-        </li>
-      </ul>
-    </div>
-
-    <createBook
-      v-if="modalId !== ''"
-      :modalId="modalId"
-      @close="closeModal()"
-    />
-
-    <div class="books__wrapper">
-      <books :books="books" @updateBooks="updateBooks()"></books>
+    <div class="controller__wrapper">
+      <button type="button" name="button">追加</button>
     </div>
   </div>
 </template>
 
 <script>
-import Books from '~/components/Books.vue'
-import CreateBook from '~/components/CreateBook.vue'
+import vis from 'vis'
+import NetworkGraph from '@/components/NetworkGraph.vue'
 export default {
-  middleware({ store, redirect }) {
-    if (!store.$auth.loggedIn) {
-      redirect('/login')
-    }
-  },
+  // middleware({ store, redirect }) {
+  // if (!store.$auth.loggedIn) {
+  // redirect('/login')
+  // }
+  // },
   components: {
-    Books,
-    CreateBook
+    NetworkGraph
   },
   data() {
     return {
-      collectionTitle: '',
-      test: '',
-      // books: [],
-      modalId: ''
-      // 現在表示中のcollectionのIDを格納(temp)
-      // displayCollectionId: ''
+      mode: 'findpath',
+      graph: null,
+      node_label: 'hostname',
+      graphRawData: null,
+      nodes_: {},
+      graphNode: [
+        { id: 1, label: '色彩デザイン学', value: 2 },
+        { id: 2, label: 'Node 2', value: 1 },
+        { id: 3, label: 'Node 3', value: 1 },
+        { id: 4, label: 'Node 4', value: 1 },
+        { id: 5, label: 'Node 5', value: 1 },
+        { id: 6, label: 'Node 5', value: 1 }
+      ],
+      graphEdge: [
+        { from: 1, to: 3 },
+        { from: 1, to: 2 },
+        { from: 2, to: 4 },
+        { from: 2, to: 5 },
+        { from: 3, to: 3 }
+      ],
+      interval: null,
+      eventName: '',
+      information: '',
+      selectEdge: ['192.168.2.0-192.168.2.1', '192.168.2.2-192.168.2.3'],
+      nodeSelect: [],
+      highlightNode: []
     }
   },
   computed: {
     // user() {      return this.$auth.user    }
+    edges() {
+      return vis.DataSet([
+        { from: 1, to: 3 },
+        { from: 1, to: 2 },
+        { from: 2, to: 4 },
+        { from: 2, to: 5 },
+        { from: 3, to: 3 }
+      ])
+    }
   },
-  asyncData({ $axios }) {
-    // get collections
-    return $axios
-      .get('http://localhost:3000/api/v1/collections/')
-      .then((res) => {
-        const myCollections = res.data
-        const displayCollectionId = res.data[0].id
-        return $axios
-          .get(
-            'http://localhost:3000/api/v1/collections/' + displayCollectionId
-          )
-          .then((resBook) => {
-            return {
-              myCollections,
-              books: resBook.data,
-              displayCollectionId
-            }
-          })
-      })
-  },
+  mounted() {},
   methods: {
     updateBooks() {
-      this.getCollectionsBooks(this.displayCollectionId)
+      this.$axios.get('http://localhost:3000/api/v1/books/').then((res) => {
+        this.myAllBooks = res.data
+      })
     },
     getCollectionsBooks(id) {
       this.$axios
         .get('http://localhost:3000/api/v1/collections/' + id)
         .then((res) => {
           this.books = res.data
-          this.displayCollectionId = id
         })
     },
     getCollections() {
@@ -146,16 +124,19 @@ export default {
 </script>
 
 <style scoped>
-.active {
-  font-size: 2rem;
-}
 .collections__container {
-  margin: 0 auto;
+  margin: 0 auto 0 0;
   min-height: 10vh;
   width: 100vw;
   display: flex;
   flex-wrap: wrap;
-  position: relative;
+}
+.map__container {
+  width: 80vw;
+}
+.controller__wrapper {
+  width: 20vw;
+  padding: 1rem;
 }
 .login__wrapper {
   width: 100vw;
